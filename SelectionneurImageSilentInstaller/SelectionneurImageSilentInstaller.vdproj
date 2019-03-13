@@ -439,7 +439,7 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SelectionneurImage"
-        "ProductCode" = "8:{F8D63CD7-14E0-4B57-9538-8CBDAE787BB9}"
+        "ProductCode" = "8:{3E519EB3-24B0-4E8A-AA64-1C844539AC4E}"
         "PackageCode" = "8:{1A07BBA0-C17B-48A9-9405-61DE4D6A7CE2}"
         "UpgradeCode" = "8:{F0EAF3D4-5A78-4BD5-BEEA-934704A552A9}"
         "AspNetVersion" = "8:4.0.30319.0"
