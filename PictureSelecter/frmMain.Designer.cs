@@ -316,7 +316,7 @@
             this.eFFACERTOUTToolStripMenuItem.Name = "eFFACERTOUTToolStripMenuItem";
             this.eFFACERTOUTToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.eFFACERTOUTToolStripMenuItem.Text = "Tout décharger";
-            this.eFFACERTOUTToolStripMenuItem.Click += new System.EventHandler(this.eFFACERTOUTToolStripMenuItem_Click);
+            this.eFFACERTOUTToolStripMenuItem.Click += new System.EventHandler(this.effacerToutToolStripMenuItem_Click);
             // 
             // quitterToolStripMenuItem
             // 

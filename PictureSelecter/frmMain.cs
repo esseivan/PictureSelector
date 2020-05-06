@@ -34,6 +34,9 @@ namespace PictureSelecter
         private string instanceRunTime;
         private int counter = 0;
         private bool btnClicked = false;
+
+        private SettingsManager<PictureFolder> settings = new SettingsManager<PictureFolder>();
+
         //private bool Dragging;
         //private int xPos;
         //private int yPos;
@@ -59,20 +62,20 @@ namespace PictureSelecter
 
         private void writeLog(string log)
         {
-#if DEBUG
             Console.WriteLine(log);
-#endif
         }
 
-        private void autoSave()
+        /// <summary>
+        /// Sauvegarde automatique
+        /// </summary>
+        private void AutoSave()
         {
             try
             {
                 if (folders.Count != 0)
                 {
                     string path = autoSavePath + "\\" + instanceRunTime;
-                    string data = export();
-                    File.WriteAllText(path, data);
+                    Export(path);
                 }
             }
             catch (Exception ex)
@@ -87,12 +90,12 @@ namespace PictureSelecter
             {
                 foreach (string filename in openFolder.FileNames)
                 {
-                    if (folders.Where((p, b) => (p.getFolderPath() == filename)).Count() == 0)
+                    if (folders.Where((p, b) => (p.GetFolderPath() == filename)).Count() == 0)
                     {
                         writeLog("Dossier choisi : " + filename);
                         PictureFolder pf = new PictureFolder(filename);
                         folders.Add(pf);
-                        ouvrirImages(pf);
+                        OuvrirImages(pf);
                     }
                 }
             }
@@ -115,8 +118,8 @@ namespace PictureSelecter
                 int j = 0;
                 foreach (PictureFolder pictureFolder in folders)
                 {
-                    j += pictureFolder.getImages().Count;
-                    foreach (ImageInfo imageInfo in pictureFolder.getImages())
+                    j += pictureFolder.GetImages().Count;
+                    foreach (ImageInfo imageInfo in pictureFolder.GetImages())
                     {
                         if (imageInfo.getSaved())
                         {
@@ -147,11 +150,14 @@ namespace PictureSelecter
             }
         }
 
-        private void ouvrirImages(PictureFolder pictureFolder)
+        /// <summary>
+        /// Ouvrir dossier
+        /// </summary>
+        private void OuvrirImages(PictureFolder pictureFolder)
         {
-            string folderPath = pictureFolder.getFolderPath();
+            string folderPath = pictureFolder.GetFolderPath();
             var rootDirectoryInfo = new DirectoryInfo(folderPath);
-            pictureFolder.clearImages();
+            pictureFolder.ClearImages();
             // Récupérer tous les fichiers
             var t_files = rootDirectoryInfo.GetFiles("*.*");
             foreach (var item in t_files)
@@ -159,7 +165,7 @@ namespace PictureSelecter
                 if (item.Extension == ".png" || item.Extension == ".jpg" || item.Extension == ".jpeg")
                 {
                     // Sauvegarder les images .png ou .jpg
-                    pictureFolder.addImage(new ImageInfo(item.Name, folderPath));
+                    pictureFolder.AddImage(new ImageInfo(item.Name, folderPath));
                     writeLog(item.Name);
                 }
             }
@@ -186,11 +192,11 @@ namespace PictureSelecter
 
         private void ListDirectory(PictureFolder pictureFolder, int mode)
         {
-            var rootDirectoryInfo = new DirectoryInfo(pictureFolder.getFolderPath());
+            var rootDirectoryInfo = new DirectoryInfo(pictureFolder.GetFolderPath());
             // Filtrer les images suivant le filtre sélectionné
-            pictureFolder.applyFilter(mode);
+            pictureFolder.ApplyFilter(mode);
             TreeNode directoryNode = new TreeNode(rootDirectoryInfo.Name) { };
-            foreach (var image in pictureFolder.getImagesFiltered())
+            foreach (var image in pictureFolder.GetImagesFiltered())
             {
                 directoryNode.Nodes.Add(new TreeNode(image.getName()) { BackColor = image.getSaved() ? Color.PaleGreen : Color.PaleVioletRed });
                 counter++;
@@ -231,7 +237,7 @@ namespace PictureSelecter
             }
 
             PictureFolder pictureFolder = folders.ElementAt(selectedFolder);
-            ImageInfo imageInfo = pictureFolder.getImagesFiltered().ElementAtOrDefault(selectedChild);
+            ImageInfo imageInfo = pictureFolder.GetImagesFiltered().ElementAtOrDefault(selectedChild);
             if (imageInfo == null)
             {
                 return;
@@ -312,7 +318,7 @@ namespace PictureSelecter
             }
 
             PictureFolder pictureFolder = folders.ElementAt(selectedFolder);
-            pictureFolder.setSaved(selectedChild, state);
+            pictureFolder.SetSaved(selectedChild, state);
             pKeep.BackColor = state ? Color.PaleGreen : Color.PaleVioletRed;
             tvMain.Nodes[selectedFolder].Nodes[selectedChild].BackColor = state ? Color.PaleGreen : Color.PaleVioletRed;
         }
@@ -348,9 +354,9 @@ namespace PictureSelecter
 
         private class ImageInfo
         {
-            private bool saved = false;
+            public bool saved = false;
             private string name;
-            private string rootPath;
+            public string rootPath;
             private static int counter = 0;
             private int id;
 
@@ -489,17 +495,17 @@ namespace PictureSelecter
 
             if (selectedChild != -1)
             {
-                setSaved(!folders.ElementAt(selectedFolder).getImagesFiltered().ElementAt(selectedChild).getSaved());
+                setSaved(!folders.ElementAt(selectedFolder).GetImagesFiltered().ElementAt(selectedChild).getSaved());
             }
             else
             {
                 var t = folders.ElementAt(selectedFolder);
-                var t2 = t.getImagesFiltered();
+                var t2 = t.GetImagesFiltered();
                 bool state;
-                for (int i = 0; i < t.getImagesFiltered().Count; i++)
+                for (int i = 0; i < t.GetImagesFiltered().Count; i++)
                 {
                     state = !t2.ElementAt(i).getSaved();
-                    t.setSaved(i, state);
+                    t.SetSaved(i, state);
                     tvMain.Nodes[selectedFolder].Nodes[i].BackColor = state ? Color.PaleGreen : Color.PaleVioletRed;
                 }
             }
@@ -587,29 +593,11 @@ namespace PictureSelecter
             writeLog("TODO");
         }
 
-        private string export()
+        private void Export(string path)
         {
-            // #00 Start of save
-            string output = "#00 START OF SAVE\n";
-            foreach (PictureFolder pictureFolder in folders)
-            {
-                // #10 Start of folder (path)
-                output = addLine(output, "#10 " + pictureFolder.getFolderPath());
-
-                foreach (ImageInfo imageInfo in pictureFolder.getImages())
-                {
-                    // #11 Image name
-                    output = addLine(output, "#11 " + imageInfo.getName());
-                    // #12 Image saved
-                    output = addLine(output, "#12 " + (imageInfo.getSaved() ? 1 : 0));
-                }
-                // #02 End of folder
-                output = addLine(output, "#02");
-            }
-            // #09 End of save
-            output = addLine(output, "#09 END OF SAVE");
-
-            return output;
+            settings.Clear();
+            settings.AddSettingRange(folders);
+            settings.Save(path);
         }
 
         private string addLine(string source, string line)
@@ -652,7 +640,7 @@ namespace PictureSelecter
                     if (lines_2[0] == "#10" && lines_2[1] != string.Empty)
                     {
                         string folderPath = lines_2[1];
-                        if (folders.Where((p, b) => p.getFolderPath() == folderPath).Count() != 0)
+                        if (folders.Where((p, b) => p.GetFolderPath() == folderPath).Count() != 0)
                         {
                             MessageBox.Show("Emplacement :\n" + folderPath + "\ndéjà chargé !", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
@@ -668,7 +656,7 @@ namespace PictureSelecter
                                 if (lines_2[0] == "#11" && lines_2[1] != string.Empty)
                                 {
                                     i++;
-                                    imageinfo = new ImageInfo(lines_2[1], pictureFolder.getFolderPath());
+                                    imageinfo = new ImageInfo(lines_2[1], pictureFolder.GetFolderPath());
                                     lines_2 = lines[i].Split(new char[] { ' ' }, 2);
 
                                     // Tag de save
@@ -676,11 +664,11 @@ namespace PictureSelecter
                                     {
                                         i++;
                                         imageinfo.setSaved(lines_2[1] == "1");
-                                        pictureFolder.addImage(imageinfo);
+                                        pictureFolder.AddImage(imageinfo);
                                     }
                                     else
                                     {
-                                        pictureFolder.addImage(imageinfo);
+                                        pictureFolder.AddImage(imageinfo);
                                         break;
                                     }
                                 }
@@ -696,9 +684,9 @@ namespace PictureSelecter
                     // Fin de dossier
                     if (lines_2[0] == "#02")
                     {
-                        if (pictureFolder.getImages() == null || pictureFolder.getImages()?.Count == 0)
+                        if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
                         {
-                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.getFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
@@ -720,9 +708,7 @@ namespace PictureSelecter
             if (svDialog.ShowDialog() == DialogResult.OK)
             {
                 writeLog("Dossier choisi : " + svDialog.FileName);
-                string data = export();
-                writeLog(data);
-                File.WriteAllText(svDialog.FileName, data);
+                Export(svDialog.FileName);
             }
         }
 
@@ -746,7 +732,7 @@ namespace PictureSelecter
 
         private void tmrAutoSave_Tick(object sender, EventArgs e)
         {
-            autoSave();
+            AutoSave();
         }
 
         private void ouvrirLeDossierDeSauvegardesAutoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -834,31 +820,34 @@ namespace PictureSelecter
 
         private class PictureFolder
         {
-            private List<ImageInfo> images;
+            public List<ImageInfo> images;
             private List<ImageInfo> images_f;
-            private string folderPath;
+            public string folderPath;
 
             public PictureFolder(string folderPath)
             {
                 this.folderPath = folderPath;
             }
 
-            public void applyFilter(int mode)
+            public void ApplyFilter(int mode)
             {
                 images_f = images.Where((i, b) => ((mode == 0) || (mode == 1 && i.getSaved()) || (mode == 2 && !i.getSaved()))).ToList();
             }
 
-            public string getFolderPath() => folderPath;
+            public string GetFolderPath() => folderPath;
 
-            public void setFolderPath(string folderPath) => this.folderPath = folderPath;
+            public void SetFolderPath(string folderPath) => this.folderPath = folderPath;
 
-            public List<ImageInfo> getImagesFiltered() => images_f;
+            public List<ImageInfo> GetImagesFiltered() => images_f;
 
-            public List<ImageInfo> getImages() => images;
+            public List<ImageInfo> GetImages()
+            {
+                return images;
+            }
 
-            public int getImagesCount() => images.Count;
+            public int GetImagesCount() => images.Count;
 
-            public void setImages(List<ImageInfo> images)
+            public void SetImages(List<ImageInfo> images)
             {
                 if (images == null)
                 {
@@ -868,7 +857,7 @@ namespace PictureSelecter
                 this.images = ((ImageInfo[])images.ToArray().Clone()).ToList();
             }
 
-            public void clearImages()
+            public void ClearImages()
             {
                 if (images == null)
                 {
@@ -878,7 +867,7 @@ namespace PictureSelecter
                 images.Clear();
             }
 
-            public void addImage(ImageInfo image)
+            public void AddImage(ImageInfo image)
             {
                 if (images == null)
                 {
@@ -888,18 +877,18 @@ namespace PictureSelecter
                 images.Add(image);
             }
 
-            public void removeImage(int index)
+            public void RemoveImage(int index)
             {
                 images.RemoveAt(index);
             }
 
-            public void setSaved(int index, bool state)
+            public void SetSaved(int index, bool state)
             {
                 images.ElementAt(images.IndexOf(images_f.ElementAt(index))).setSaved(state);
             }
         }
 
-        private void eFFACERTOUTToolStripMenuItem_Click(object sender, EventArgs e)
+        private void effacerToutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Attention !\nToutes données non sauvegardées seront perdues !!\nTous les dossiers ouverts seront déchargés !\nCONTINUER ?", "ATTENTION", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
@@ -928,15 +917,15 @@ namespace PictureSelecter
                 {
                     writeLog("Drag and drop folder : " + file);
 
-                    var copies = folders.Where((p, b) => (p.getFolderPath() == file));
+                    var copies = folders.Where((p, b) => (p.GetFolderPath() == file));
 
                     if (copies.Count() == 0)
                     {
                         PictureFolder pictureFolder = new PictureFolder(file);
-                        ouvrirImages(pictureFolder);
-                        if (pictureFolder.getImages() == null || pictureFolder.getImages()?.Count == 0)
+                        OuvrirImages(pictureFolder);
+                        if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
                         {
-                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.getFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
@@ -946,10 +935,10 @@ namespace PictureSelecter
                     else
                     {
                         PictureFolder pictureFolder = copies.FirstOrDefault();
-                        ouvrirImages(pictureFolder);
-                        if (pictureFolder.getImages() == null || pictureFolder.getImages()?.Count == 0)
+                        OuvrirImages(pictureFolder);
+                        if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
                         {
-                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.getFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                 }
@@ -1050,15 +1039,15 @@ namespace PictureSelecter
 
         private void toutMettreGardéToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            setSavedAll(true);
+            SetSavedAll(true);
         }
 
         private void toutMettreNonGardéToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            setSavedAll(false);
+            SetSavedAll(false);
         }
 
-        private void setSavedAll(bool state)
+        private void SetSavedAll(bool state)
         {
             var parent = tvMain.SelectedNode.Parent;
             if (parent != null)
@@ -1068,9 +1057,9 @@ namespace PictureSelecter
 
             PictureFolder pictureFolder = folders.ElementAt(selectedFolder);
 
-            for (int i = 0; i < pictureFolder.getImagesCount(); i++)
+            for (int i = 0; i < pictureFolder.GetImagesCount(); i++)
             {
-                pictureFolder.setSaved(i, state);
+                pictureFolder.SetSaved(i, state);
             }
             ListDirectories(displayMode);
         }
@@ -1118,7 +1107,7 @@ namespace PictureSelecter
                 return;
             }
 
-            folders.ElementAt(selectedFolder).removeImage(selectedChild);
+            folders.ElementAt(selectedFolder).RemoveImage(selectedChild);
 
             ListDirectories(displayMode);
         }
@@ -1158,40 +1147,5 @@ namespace PictureSelecter
         //        c.Left = e.X + c.Left - xPos;
         //    }
         //}
-
-        // Match the orientation code to the correct rotation:
-
-        private static RotateFlipType OrientationToFlipType(string orientation)
-        {
-            switch (int.Parse(orientation))
-            {
-                case 1:
-                    return RotateFlipType.RotateNoneFlipNone;
-                    break;
-                case 2:
-                    return RotateFlipType.RotateNoneFlipX;
-                    break;
-                case 3:
-                    return RotateFlipType.Rotate180FlipNone;
-                    break;
-                case 4:
-                    return RotateFlipType.Rotate180FlipX;
-                    break;
-                case 5:
-                    return RotateFlipType.Rotate90FlipX;
-                    break;
-                case 6:
-                    return RotateFlipType.Rotate90FlipNone;
-                    break;
-                case 7:
-                    return RotateFlipType.Rotate270FlipX;
-                    break;
-                case 8:
-                    return RotateFlipType.Rotate270FlipNone;
-                    break;
-                default:
-                    return RotateFlipType.RotateNoneFlipNone;
-            }
-        }
     }
 }
