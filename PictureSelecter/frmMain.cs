@@ -740,70 +740,6 @@ namespace PictureSelecter
             Process.Start(autoSavePath);
         }
 
-        private void vérifierLesMisesÀJourToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CheckUpdate();
-        }
-        
-        private async void CheckUpdate()
-        {
-            try
-            {
-                //MessageBox.Show(System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
-                UpdateChecker update = new UpdateChecker(@"http://www.esseivan.ch/files/softwares/selectionneurimage/infos.xml", System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
-                update.CheckUpdates();
-                if (update.Result.ErrorOccurred)
-                {
-                    MessageBox.Show(update.Result.Error.ToString(), "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                if (update.NeedUpdate())
-                {   // Update available
-                    var result = update.Result;
-
-                    Dialog.DialogConfig dialogConfig = new Dialog.DialogConfig()
-                    {
-                        Message = $"Update is available, do you want to download ?\nCurrent: { result.CurrentVersion}\nLast: { result.LastVersion}",
-                        Title = "Update available",
-                        Button1 = Dialog.ButtonType.Custom1,
-                        CustomButton1Text = "Visit website",
-                        Button2 = Dialog.ButtonType.Custom2,
-                        CustomButton2Text = "Download and install",
-                        Button3 = Dialog.ButtonType.Cancel,
-                    };
-
-                    var dr = Dialog.ShowDialog(dialogConfig);
-
-                    if (dr.DialogResult == Dialog.DialogResult.Custom1)
-                    {
-                        // Visit website
-                        result.OpenUpdateWebsite();
-                    }
-                    else if (dr.DialogResult == Dialog.DialogResult.Custom2)
-                    {
-                        // Download and install
-                        if (await result.DownloadUpdate())
-                        {
-                            Close();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Unable to download update", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("No new release found", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Unknown error :\n{ex.ToString()}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void frmMain_Load(object sender, EventArgs e)
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -814,8 +750,6 @@ namespace PictureSelecter
                 Close();
                 return;
             }
-
-            unknownVersionToolStripMenuItem.Text = "v" + Application.ProductVersion;
         }
 
         private class PictureFolder
@@ -1115,6 +1049,11 @@ namespace PictureSelecter
         private void tvMain_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void modeFacileToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         //private Image zoomImage(Image image, double factor)
