@@ -33,18 +33,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_544771C3C9FBB49D7504EA3CED050EEA"
-        "OwnerKey" = "8:_5155B5E7E46D421BA98DC9B55C976E7F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_544771C3C9FBB49D7504EA3CED050EEA"
-        "OwnerKey" = "8:_F836B790D6538A4B24360029C52D9479"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_70B60AFD7089449BD7B2BC3FA1AC7BD3"
         "OwnerKey" = "8:_5155B5E7E46D421BA98DC9B55C976E7F"
         "MsmSig" = "8:_UNDEFINED"
@@ -57,7 +45,19 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F836B790D6538A4B24360029C52D9479"
+        "MsmKey" = "8:_ED74876E9C61A55E9AD3A4EF5C9AB3FC"
+        "OwnerKey" = "8:_5155B5E7E46D421BA98DC9B55C976E7F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_ED74876E9C61A55E9AD3A4EF5C9AB3FC"
+        "OwnerKey" = "8:_F08B32DB33D89DF6D2784B08814CEE61"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F08B32DB33D89DF6D2784B08814CEE61"
         "OwnerKey" = "8:_5155B5E7E46D421BA98DC9B55C976E7F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -70,13 +70,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F836B790D6538A4B24360029C52D9479"
+        "OwnerKey" = "8:_F08B32DB33D89DF6D2784B08814CEE61"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_544771C3C9FBB49D7504EA3CED050EEA"
+        "OwnerKey" = "8:_ED74876E9C61A55E9AD3A4EF5C9AB3FC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -210,7 +210,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_1B1F7F1AA076F79AE6604086643B9A88"
@@ -237,42 +237,11 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_544771C3C9FBB49D7504EA3CED050EEA"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_544771C3C9FBB49D7504EA3CED050EEA"
-                    {
-                    "Name" = "8:Microsoft.WindowsAPICodePack.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.WindowsAPICodePack.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_5433A133634A46DD993A94B3C0ACD612"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_70B60AFD7089449BD7B2BC3FA1AC7BD3"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:EsseivaN_Lib, Version=1.3.4.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:EsseivaN_Lib, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_70B60AFD7089449BD7B2BC3FA1AC7BD3"
@@ -330,14 +299,45 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F836B790D6538A4B24360029C52D9479"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ED74876E9C61A55E9AD3A4EF5C9AB3FC"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_ED74876E9C61A55E9AD3A4EF5C9AB3FC"
+                    {
+                    "Name" = "8:Microsoft.WindowsAPICodePack.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.WindowsAPICodePack.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5433A133634A46DD993A94B3C0ACD612"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F08B32DB33D89DF6D2784B08814CEE61"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_F836B790D6538A4B24360029C52D9479"
+                    "_F08B32DB33D89DF6D2784B08814CEE61"
                     {
                     "Name" = "8:Microsoft.WindowsAPICodePack.Shell.dll"
                     "Attributes" = "3:512"
@@ -364,6 +364,29 @@
         }
         "FileType"
         {
+            "{5EB83D71-FA18-4901-BE56-DE22E13CC478}:_A232593D4DB04F3F8E71D7417B6D11F4"
+            {
+            "Name" = "8:ssv"
+            "Description" = "8:"
+            "Extensions" = "8:.ssv"
+            "MIME" = "8:"
+            "Icon" = "8:"
+            "IconIndex" = "3:0"
+                "Command"
+                {
+                "Command" = "8:_5155B5E7E46D421BA98DC9B55C976E7F"
+                }
+                "Verbs"
+                {
+                    "{95C0C507-CBF0-42B8-B119-07219E384A4A}:_6B474B8B786A4E55A4DF211C2D670CB9"
+                    {
+                    "Command" = "8:&Open"
+                    "Verb" = "8:open"
+                    "Arguments" = "8:\"%1\""
+                    "Order" = "3:0"
+                    }
+                }
+            }
         }
         "Folder"
         {
@@ -440,7 +463,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SelectionneurImage"
         "ProductCode" = "8:{3E519EB3-24B0-4E8A-AA64-1C844539AC4E}"
-        "PackageCode" = "8:{1A07BBA0-C17B-48A9-9405-61DE4D6A7CE2}"
+        "PackageCode" = "8:{9B81C169-FBB8-4F55-AA63-5B8AF05460E3}"
         "UpgradeCode" = "8:{F0EAF3D4-5A78-4BD5-BEEA-934704A552A9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -463,7 +486,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:copy \"$(BuiltOuputPath)\" \"C:\\EsseivaN\\apps\"\r\ncopy \"$(BuiltOuputPath)\" \"C:\\WorkSpace\\Personnal\\website\\html\\files\\softwares\\selectionneurimage\"\r\n\"C:\\EsseivaN\\tools\\PostBuild\\PostBuild.exe\" \"C:\\WorkSpace\\Personnal\\PictureSelecter\\postbuild_config.log\""
+        "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"

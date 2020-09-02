@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.pPB = new System.Windows.Forms.Panel();
             this.btnRotCCW = new System.Windows.Forms.Button();
-            this.btnRotLeft = new System.Windows.Forms.Button();
+            this.btnRotCW = new System.Windows.Forms.Button();
             this.btnKeep = new System.Windows.Forms.Button();
             this.pKeep = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,7 +52,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.eFFACERTOUTToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.affichageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.afficherCacherListeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.afficherCacherListeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.afficherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sélectionnéesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -94,14 +94,14 @@
             this.pPB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pPB.Controls.Add(this.btnRotCCW);
-            this.pPB.Controls.Add(this.btnRotLeft);
+            this.pPB.Controls.Add(this.btnRotCW);
             this.pPB.Controls.Add(this.btnKeep);
             this.pPB.Controls.Add(this.pKeep);
             this.pPB.Controls.Add(this.label1);
             this.pPB.Controls.Add(this.cbboxSizeMode);
             this.pPB.Location = new System.Drawing.Point(3, 416);
             this.pPB.Name = "pPB";
-            this.pPB.Size = new System.Drawing.Size(637, 45);
+            this.pPB.Size = new System.Drawing.Size(625, 45);
             this.pPB.TabIndex = 1;
             // 
             // btnRotCCW
@@ -114,26 +114,26 @@
             this.btnRotCCW.UseVisualStyleBackColor = true;
             this.btnRotCCW.Click += new System.EventHandler(this.btnRotRight_Click);
             // 
-            // btnRotLeft
+            // btnRotCW
             // 
-            this.btnRotLeft.Location = new System.Drawing.Point(133, 3);
-            this.btnRotLeft.Name = "btnRotLeft";
-            this.btnRotLeft.Size = new System.Drawing.Size(75, 39);
-            this.btnRotLeft.TabIndex = 10;
-            this.btnRotLeft.Text = "Rotation horaire";
-            this.btnRotLeft.UseVisualStyleBackColor = true;
-            this.btnRotLeft.Click += new System.EventHandler(this.btnRotLeft_Click);
+            this.btnRotCW.Location = new System.Drawing.Point(133, 3);
+            this.btnRotCW.Name = "btnRotCW";
+            this.btnRotCW.Size = new System.Drawing.Size(75, 39);
+            this.btnRotCW.TabIndex = 10;
+            this.btnRotCW.Text = "Rotation horaire";
+            this.btnRotCW.UseVisualStyleBackColor = true;
+            this.btnRotCW.Click += new System.EventHandler(this.btnRotCW_Click);
             // 
             // btnKeep
             // 
             this.btnKeep.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnKeep.Location = new System.Drawing.Point(559, 3);
+            this.btnKeep.Location = new System.Drawing.Point(547, 3);
             this.btnKeep.Name = "btnKeep";
             this.btnKeep.Size = new System.Drawing.Size(75, 39);
             this.btnKeep.TabIndex = 9;
             this.btnKeep.Text = "Garder";
             this.btnKeep.UseVisualStyleBackColor = true;
-            this.btnKeep.Click += new System.EventHandler(this.button3_Click);
+            this.btnKeep.Click += new System.EventHandler(this.btnKeep_Click);
             // 
             // pKeep
             // 
@@ -142,7 +142,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pKeep.Location = new System.Drawing.Point(295, 3);
             this.pKeep.Name = "pKeep";
-            this.pKeep.Size = new System.Drawing.Size(258, 39);
+            this.pKeep.Size = new System.Drawing.Size(246, 39);
             this.pKeep.TabIndex = 5;
             // 
             // label1
@@ -293,19 +293,19 @@
             // affichageToolStripMenuItem
             // 
             this.affichageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.afficherCacherListeToolStripMenuItem1,
+            this.afficherCacherListeToolStripMenuItem,
             this.afficherToolStripMenuItem,
             this.modeFacileToolStripMenuItem});
             this.affichageToolStripMenuItem.Name = "affichageToolStripMenuItem";
             this.affichageToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
             this.affichageToolStripMenuItem.Text = "Affichage";
             // 
-            // afficherCacherListeToolStripMenuItem1
+            // afficherCacherListeToolStripMenuItem
             // 
-            this.afficherCacherListeToolStripMenuItem1.Name = "afficherCacherListeToolStripMenuItem1";
-            this.afficherCacherListeToolStripMenuItem1.Size = new System.Drawing.Size(188, 22);
-            this.afficherCacherListeToolStripMenuItem1.Text = "Afficher / Cacher liste";
-            this.afficherCacherListeToolStripMenuItem1.Click += new System.EventHandler(this.afficherCacherListeToolStripMenuItem_Click);
+            this.afficherCacherListeToolStripMenuItem.Name = "afficherCacherListeToolStripMenuItem";
+            this.afficherCacherListeToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+            this.afficherCacherListeToolStripMenuItem.Text = "Afficher / Cacher liste";
+            this.afficherCacherListeToolStripMenuItem.Click += new System.EventHandler(this.afficherCacherListeToolStripMenuItem_Click);
             // 
             // afficherToolStripMenuItem
             // 
@@ -357,7 +357,9 @@
             // 
             // modeFacileToolStripMenuItem
             // 
+            this.modeFacileToolStripMenuItem.Checked = true;
             this.modeFacileToolStripMenuItem.CheckOnClick = true;
+            this.modeFacileToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.modeFacileToolStripMenuItem.Name = "modeFacileToolStripMenuItem";
             this.modeFacileToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.modeFacileToolStripMenuItem.Text = "Mode facile";
@@ -424,7 +426,7 @@
             this.panel1.Controls.Add(this.pbMain);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(637, 407);
+            this.panel1.Size = new System.Drawing.Size(625, 407);
             this.panel1.TabIndex = 10;
             // 
             // pbMain
@@ -434,7 +436,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pbMain.Location = new System.Drawing.Point(0, 0);
             this.pbMain.Name = "pbMain";
-            this.pbMain.Size = new System.Drawing.Size(637, 407);
+            this.pbMain.Size = new System.Drawing.Size(625, 407);
             this.pbMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbMain.TabIndex = 0;
             this.pbMain.TabStop = false;
@@ -596,7 +598,7 @@
         private System.Windows.Forms.ToolStripMenuItem eFFACERTOUTToolStripMenuItem;
         private System.Windows.Forms.Label lblCount;
         private System.Windows.Forms.Button btnRotCCW;
-        private System.Windows.Forms.Button btnRotLeft;
+        private System.Windows.Forms.Button btnRotCW;
         private System.Windows.Forms.ContextMenuStrip cmsDirectory;
         private System.Windows.Forms.ToolStripMenuItem toutMettreGardéToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toutMettreNonGardéToolStripMenuItem;
@@ -609,7 +611,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem affichageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem afficherCacherListeToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem afficherCacherListeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem modeFacileToolStripMenuItem;
     }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Windows.Forms;
 using static System.Environment;
 
@@ -84,20 +85,25 @@ namespace PictureSelecter
             }
         }
 
+        private void OuvrirDossier(IEnumerable<string> path)
+        {
+            foreach (string filename in path)
+            {
+                if (folders.Where((p, b) => (p.GetFolderPath() == filename)).Count() == 0)
+                {
+                    writeLog("Dossier choisi : " + filename);
+                    PictureFolder pf = new PictureFolder(filename);
+                    folders.Add(pf);
+                    OuvrirImages(pf);
+                }
+            }
+        }
+
         private void ouvrirDossierToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (openFolderDialog("Sélectionnez le dossier à ouvrir") == CommonFileDialogResult.Ok)
             {
-                foreach (string filename in openFolder.FileNames)
-                {
-                    if (folders.Where((p, b) => (p.GetFolderPath() == filename)).Count() == 0)
-                    {
-                        writeLog("Dossier choisi : " + filename);
-                        PictureFolder pf = new PictureFolder(filename);
-                        folders.Add(pf);
-                        OuvrirImages(pf);
-                    }
-                }
+                OuvrirDossier(openFolder.FileNames);
             }
         }
 
@@ -162,7 +168,12 @@ namespace PictureSelecter
             var t_files = rootDirectoryInfo.GetFiles("*.*");
             foreach (var item in t_files)
             {
-                if (item.Extension == ".png" || item.Extension == ".jpg" || item.Extension == ".jpeg")
+                string mimeType = MimeMapping.GetMimeMapping(item.Name).ToLowerInvariant();
+
+                if (string.IsNullOrEmpty(mimeType))
+                    continue;
+
+                if (mimeType.Contains("image"))
                 {
                     // Sauvegarder les images .png ou .jpg
                     pictureFolder.AddImage(new ImageInfo(item.Name, folderPath));
@@ -352,10 +363,10 @@ namespace PictureSelecter
             }
         }
 
-        private class ImageInfo
+        public class ImageInfo
         {
             public bool saved = false;
-            private string name;
+            public string name;
             public string rootPath;
             private static int counter = 0;
             private int id;
@@ -407,7 +418,7 @@ namespace PictureSelecter
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OnBtnPreviousClicked()
         {
             btnClicked = true;
             if (folders.Count == 0)
@@ -446,7 +457,12 @@ namespace PictureSelecter
             btnClicked = false;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OnBtnPreviousClicked();
+        }
+
+        private void OnBtnNextClicked()
         {
             btnClicked = true;
             if (folders.Count == 0)
@@ -486,7 +502,12 @@ namespace PictureSelecter
             btnClicked = false;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OnBtnNextClicked();
+        }
+
+        private void OnBtnKeepClicked()
         {
             if (folders.Count == 0)
             {
@@ -513,29 +534,34 @@ namespace PictureSelecter
             tvMain.Focus();
         }
 
+        private void btnKeep_Click(object sender, EventArgs e)
+        {
+            OnBtnKeepClicked();
+        }
+
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
                 case Keys.Space:
                 case Keys.Enter:
-                    btnKeep.PerformClick();
+                    OnBtnKeepClicked();
                     e.Handled = true;
                     break;
                 case Keys.Down:
-                    btnNext.PerformClick();
+                    OnBtnNextClicked();
                     e.Handled = true;
                     break;
                 case Keys.Right:
-                    btnRotLeft.PerformClick();
-                    e.Handled = true;
-                    break;
-                case Keys.Up:
-                    btnPrevious.PerformClick();
+                    OnBtnRotCWClicked();
                     e.Handled = true;
                     break;
                 case Keys.Left:
-                    btnRotCCW.PerformClick();
+                    OnBtnRotCCWClicked();
+                    e.Handled = true;
+                    break;
+                case Keys.Up:
+                    OnBtnPreviousClicked();
                     e.Handled = true;
                     break;
                 default:
@@ -610,98 +636,105 @@ namespace PictureSelecter
             if (ofDialog.ShowDialog() == DialogResult.OK)
             {
                 writeLog("Fichier choisi : " + ofDialog.FileName);
-                import(ofDialog.FileName);
+                Import(ofDialog.FileName);
             }
         }
 
-        private void import(string path)
+        private void Import(string path)
         {
-            string data = File.ReadAllText(path).Replace("\r", "");
-            string[] lines = data.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines_2;
-            ImageInfo imageinfo;
-            PictureFolder pictureFolder = new PictureFolder(null);
-            if (lines.Length < 2)
-            {
-                MessageBox.Show("Sauvegarde invalide", "ERREUR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            // Tag de début et fin de sauvegarde
-            if (lines.FirstOrDefault() == "#00 START OF SAVE" && lines.LastOrDefault() == "#09 END OF SAVE")
-            {
-                writeLog("Valid save format");
-
-                int i = 1;
-                while (i < (lines.Length - 1))
-                {
-                    lines_2 = lines[i++].Split(new char[] { ' ' }, 2);
-
-                    // Tag de début de dossier
-                    if (lines_2[0] == "#10" && lines_2[1] != string.Empty)
-                    {
-                        string folderPath = lines_2[1];
-                        if (folders.Where((p, b) => p.GetFolderPath() == folderPath).Count() != 0)
-                        {
-                            MessageBox.Show("Emplacement :\n" + folderPath + "\ndéjà chargé !", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else
-                        {
-                            pictureFolder = new PictureFolder(lines_2[1]);
-
-                            while (i < (lines.Length - 1))
-                            {
-                                lines_2 = lines[i].Split(new char[] { ' ' }, 2);
-
-                                // Tag d'image
-                                if (lines_2[0] == "#11" && lines_2[1] != string.Empty)
-                                {
-                                    i++;
-                                    imageinfo = new ImageInfo(lines_2[1], pictureFolder.GetFolderPath());
-                                    lines_2 = lines[i].Split(new char[] { ' ' }, 2);
-
-                                    // Tag de save
-                                    if (lines_2[0] == "#12" && lines_2[1] != string.Empty)
-                                    {
-                                        i++;
-                                        imageinfo.setSaved(lines_2[1] == "1");
-                                        pictureFolder.AddImage(imageinfo);
-                                    }
-                                    else
-                                    {
-                                        pictureFolder.AddImage(imageinfo);
-                                        break;
-                                    }
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    lines_2 = lines[i].Split(new char[] { ' ' }, 2);
-                    // Fin de dossier
-                    if (lines_2[0] == "#02")
-                    {
-                        if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
-                        {
-                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else
-                        {
-                            folders.Add(pictureFolder);
-                        }
-                    }
-                    // Fin de sauvegarde
-                    else if (lines_2[0] == "#09")
-                    {
-                        break;
-                    }
-                }
-                ListDirectories(displayMode);
-            }
+            settings.Clear();
+            folders = settings.Load(path).Values.ToList();
+            ListDirectories(displayMode);
         }
+
+        //private void import(string path)
+        //{
+        //    string data = File.ReadAllText(path).Replace("\r", "");
+        //    string[] lines = data.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        //    string[] lines_2;
+        //    ImageInfo imageinfo;
+        //    PictureFolder pictureFolder = new PictureFolder(null);
+        //    if (lines.Length < 2)
+        //    {
+        //        MessageBox.Show("Sauvegarde invalide", "ERREUR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //        return;
+        //    }
+        //    // Tag de début et fin de sauvegarde
+        //    if (lines.FirstOrDefault() == "#00 START OF SAVE" && lines.LastOrDefault() == "#09 END OF SAVE")
+        //    {
+        //        writeLog("Valid save format");
+
+        //        int i = 1;
+        //        while (i < (lines.Length - 1))
+        //        {
+        //            lines_2 = lines[i++].Split(new char[] { ' ' }, 2);
+
+        //            // Tag de début de dossier
+        //            if (lines_2[0] == "#10" && lines_2[1] != string.Empty)
+        //            {
+        //                string folderPath = lines_2[1];
+        //                if (folders.Where((p, b) => p.GetFolderPath() == folderPath).Count() != 0)
+        //                {
+        //                    MessageBox.Show("Emplacement :\n" + folderPath + "\ndéjà chargé !", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //                }
+        //                else
+        //                {
+        //                    pictureFolder = new PictureFolder(lines_2[1]);
+
+        //                    while (i < (lines.Length - 1))
+        //                    {
+        //                        lines_2 = lines[i].Split(new char[] { ' ' }, 2);
+
+        //                        // Tag d'image
+        //                        if (lines_2[0] == "#11" && lines_2[1] != string.Empty)
+        //                        {
+        //                            i++;
+        //                            imageinfo = new ImageInfo(lines_2[1], pictureFolder.GetFolderPath());
+        //                            lines_2 = lines[i].Split(new char[] { ' ' }, 2);
+
+        //                            // Tag de save
+        //                            if (lines_2[0] == "#12" && lines_2[1] != string.Empty)
+        //                            {
+        //                                i++;
+        //                                imageinfo.setSaved(lines_2[1] == "1");
+        //                                pictureFolder.AddImage(imageinfo);
+        //                            }
+        //                            else
+        //                            {
+        //                                pictureFolder.AddImage(imageinfo);
+        //                                break;
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            break;
+        //                        }
+        //                    }
+        //                }
+        //            }
+
+        //            lines_2 = lines[i].Split(new char[] { ' ' }, 2);
+        //            // Fin de dossier
+        //            if (lines_2[0] == "#02")
+        //            {
+        //                if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
+        //                {
+        //                    MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //                }
+        //                else
+        //                {
+        //                    folders.Add(pictureFolder);
+        //                }
+        //            }
+        //            // Fin de sauvegarde
+        //            else if (lines_2[0] == "#09")
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        ListDirectories(displayMode);
+        //    }
+        //}
 
         private void sauvegarderToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -750,6 +783,13 @@ namespace PictureSelecter
                 Close();
                 return;
             }
+            foreach (string arg in args)
+            {
+                TryImportSave(arg);
+            }
+
+            modeFacileToolStripMenuItem.Checked = false;
+            modeFacileToolStripMenuItem.Checked = true;
         }
 
         private class PictureFolder
@@ -841,6 +881,15 @@ namespace PictureSelecter
             displayPicture();
         }
 
+        private void TryImportSave(string file)
+        {
+            string ext = Path.GetExtension(file);
+            if (ext.Equals(".ssv", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Import(file);
+            }
+        }
+
         private void pbMain_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -882,7 +931,7 @@ namespace PictureSelecter
                     if (ext.Equals(".ssv", StringComparison.CurrentCultureIgnoreCase))
                     {
                         e.Effect = DragDropEffects.Copy;
-                        import(file);
+                        Import(file);
                     }
                 }
             }
@@ -914,7 +963,7 @@ namespace PictureSelecter
             }
         }
 
-        private void btnRotRight_Click(object sender, EventArgs e)
+        private void OnBtnRotCCWClicked()
         {
             if (folders.Count == 0)
             {
@@ -930,7 +979,12 @@ namespace PictureSelecter
             tvMain.Focus();
         }
 
-        private void btnRotLeft_Click(object sender, EventArgs e)
+        private void btnRotRight_Click(object sender, EventArgs e)
+        {
+            OnBtnRotCCWClicked();
+        }
+
+        private void OnBtnRotCWClicked()
         {
             if (folders.Count == 0)
             {
@@ -944,6 +998,11 @@ namespace PictureSelecter
                 pbMain.Image = currentImage;
             }
             tvMain.Focus();
+        }
+
+        private void btnRotCW_Click(object sender, EventArgs e)
+        {
+            OnBtnRotCWClicked();
         }
 
         private void tvMain_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -1053,7 +1112,9 @@ namespace PictureSelecter
 
         private void modeFacileToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
-
+            bool s = !modeFacileToolStripMenuItem.Checked;
+            btnPrevious.Visible = btnNext.Visible = lblCount.Visible = s;
+            label1.Visible = cbboxSizeMode.Visible = btnRotCW.Visible = btnRotCCW.Visible = btnKeep.Visible = s;
         }
 
         //private Image zoomImage(Image image, double factor)
