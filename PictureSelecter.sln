@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PictureSelecter", "PictureSelecter\PictureSelecter.csproj", "{2A7A4FEE-0368-489E-8A75-65B097A60A65}"
 EndProject
@@ -10,11 +10,6 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SelectionneurImageSilentInstaller", "SelectionneurImageSilentInstaller\SelectionneurImageSilentInstaller.vdproj", "{9AD2D153-204E-4450-B691-A4979DDBC9BF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7D907DF7-7ACA-4E25-85F7-ED391610B973} = {7D907DF7-7ACA-4E25-85F7-ED391610B973}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{616C9769-14E6-4DF5-AD52-2F80F06C5BF2}"
-	ProjectSection(SolutionItems) = preProject
-		postbuild_config.log = postbuild_config.log
 	EndProjectSection
 EndProject
 Global
