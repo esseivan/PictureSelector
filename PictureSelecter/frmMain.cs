@@ -1,4 +1,5 @@
-﻿using EsseivaN.Tools;
+﻿using ESNLib.Tools;
+using EsseivaN.Tools;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -36,8 +37,6 @@ namespace PictureSelecter
         private int counter = 0;
         private bool btnClicked = false;
 
-        private SettingsManager<PictureFolder> settings = new SettingsManager<PictureFolder>();
-
         //private bool Dragging;
         //private int xPos;
         //private int yPos;
@@ -50,7 +49,8 @@ namespace PictureSelecter
             cbboxSizeMode.SelectedIndex = 5;
             svDialog.InitialDirectory = GetFolderPath(SpecialFolder.MyPictures);
             ofDialog.InitialDirectory = GetFolderPath(SpecialFolder.MyPictures);
-            autoSavePath = GetFolderPath(SpecialFolder.MyDocuments) + "\\SelectionneurImages_AutoSaves";
+            autoSavePath =
+                GetFolderPath(SpecialFolder.MyDocuments) + "\\SelectionneurImages_AutoSaves";
             if (!Directory.Exists(autoSavePath))
             {
                 Directory.CreateDirectory(autoSavePath);
@@ -81,7 +81,14 @@ namespace PictureSelecter
             }
             catch (Exception ex)
             {
-                writeLog("Unable to autosave at " + autoSavePath + "\\" + instanceRunTime + "\nError : " + ex.Message);
+                writeLog(
+                    "Unable to autosave at "
+                        + autoSavePath
+                        + "\\"
+                        + instanceRunTime
+                        + "\nError : "
+                        + ex.Message
+                );
             }
         }
 
@@ -115,7 +122,9 @@ namespace PictureSelecter
 
         private void exporterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (openFolderDialog("Sélectionnez l'emplacement d'export") == CommonFileDialogResult.Ok)
+            if (
+                openFolderDialog("Sélectionnez l'emplacement d'export") == CommonFileDialogResult.Ok
+            )
             {
                 string exportPath = openFolder.FileName;
                 writeLog("Dossier choisi : " + exportPath);
@@ -143,7 +152,19 @@ namespace PictureSelecter
                                 }
                                 catch (Exception ex)
                                 {
-                                    if (MessageBox.Show("Impossible de copier :\n" + imageInfo.getFullName() + "\nà la destination suivante :\n" + destPath + "\nErreur : \n" + ex.Message, "ERREUR", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                                    if (
+                                        MessageBox.Show(
+                                            "Impossible de copier :\n"
+                                                + imageInfo.getFullName()
+                                                + "\nà la destination suivante :\n"
+                                                + destPath
+                                                + "\nErreur : \n"
+                                                + ex.Message,
+                                            "ERREUR",
+                                            MessageBoxButtons.OKCancel,
+                                            MessageBoxIcon.Error
+                                        ) == DialogResult.Cancel
+                                    )
                                     {
                                         return;
                                     }
@@ -152,7 +173,12 @@ namespace PictureSelecter
                         }
                     }
                 }
-                MessageBox.Show("Copie de " + i + "/" + j + " images terminées.\nDestination : " + exportPath, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Copie de " + i + "/" + j + " images terminées.\nDestination : " + exportPath,
+                    "Information",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
             }
         }
 
@@ -209,7 +235,12 @@ namespace PictureSelecter
             TreeNode directoryNode = new TreeNode(rootDirectoryInfo.Name) { };
             foreach (var image in pictureFolder.GetImagesFiltered())
             {
-                directoryNode.Nodes.Add(new TreeNode(image.getName()) { BackColor = image.getSaved() ? Color.PaleGreen : Color.PaleVioletRed });
+                directoryNode.Nodes.Add(
+                    new TreeNode(image.getName())
+                    {
+                        BackColor = image.getSaved() ? Color.PaleGreen : Color.PaleVioletRed
+                    }
+                );
                 counter++;
             }
             tvMain.Nodes.Add(directoryNode);
@@ -248,7 +279,9 @@ namespace PictureSelecter
             }
 
             PictureFolder pictureFolder = folders.ElementAt(selectedFolder);
-            ImageInfo imageInfo = pictureFolder.GetImagesFiltered().ElementAtOrDefault(selectedChild);
+            ImageInfo imageInfo = pictureFolder
+                .GetImagesFiltered()
+                .ElementAtOrDefault(selectedChild);
             if (imageInfo == null)
             {
                 return;
@@ -257,7 +290,12 @@ namespace PictureSelecter
             string filePath = imageInfo.getFullName();
             if (!File.Exists(filePath))
             {
-                MessageBox.Show("Erreur ! Fichier non trouvé : \n" + filePath, "ERREUR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Erreur ! Fichier non trouvé : \n" + filePath,
+                    "ERREUR",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
                 pbMain.Image = null;
                 return;
             }
@@ -331,7 +369,9 @@ namespace PictureSelecter
             PictureFolder pictureFolder = folders.ElementAt(selectedFolder);
             pictureFolder.SetSaved(selectedChild, state);
             pKeep.BackColor = state ? Color.PaleGreen : Color.PaleVioletRed;
-            tvMain.Nodes[selectedFolder].Nodes[selectedChild].BackColor = state ? Color.PaleGreen : Color.PaleVioletRed;
+            tvMain.Nodes[selectedFolder].Nodes[selectedChild].BackColor = state
+                ? Color.PaleGreen
+                : Color.PaleVioletRed;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -386,13 +426,10 @@ namespace PictureSelecter
                 return rootPath + "\\" + name;
             }
 
-            private ImageInfo()
-            {
-            }
+            private ImageInfo() { }
 
-            public ImageInfo(string Name, string RootPath) : this(Name, RootPath, false)
-            {
-            }
+            public ImageInfo(string Name, string RootPath)
+                : this(Name, RootPath, false) { }
 
             public ImageInfo(string Name, string RootPath, bool Saved)
             {
@@ -516,7 +553,13 @@ namespace PictureSelecter
 
             if (selectedChild != -1)
             {
-                setSaved(!folders.ElementAt(selectedFolder).GetImagesFiltered().ElementAt(selectedChild).getSaved());
+                setSaved(
+                    !folders
+                        .ElementAt(selectedFolder)
+                        .GetImagesFiltered()
+                        .ElementAt(selectedChild)
+                        .getSaved()
+                );
             }
             else
             {
@@ -527,7 +570,9 @@ namespace PictureSelecter
                 {
                     state = !t2.ElementAt(i).getSaved();
                     t.SetSaved(i, state);
-                    tvMain.Nodes[selectedFolder].Nodes[i].BackColor = state ? Color.PaleGreen : Color.PaleVioletRed;
+                    tvMain.Nodes[selectedFolder].Nodes[i].BackColor = state
+                        ? Color.PaleGreen
+                        : Color.PaleVioletRed;
                 }
             }
 
@@ -577,7 +622,8 @@ namespace PictureSelecter
             }
             else
             {
-                sélectionnéesToolStripMenuItem.Checked = nonSélectionnéesToolStripMenuItem.Checked = false;
+                sélectionnéesToolStripMenuItem.Checked = nonSélectionnéesToolStripMenuItem.Checked =
+                    false;
                 writeLog("Afficher tout");
                 displayMode = 0;
             }
@@ -621,9 +667,7 @@ namespace PictureSelecter
 
         private void Export(string path)
         {
-            settings.Clear();
-            settings.AddSettingRange(folders);
-            settings.Save(path);
+            ESNLib.Tools.SettingsManager.SaveTo(path, folders, indent: false);
         }
 
         private string addLine(string source, string line)
@@ -642,8 +686,13 @@ namespace PictureSelecter
 
         private void Import(string path)
         {
-            settings.Clear();
-            folders = settings.Load(path).Values.ToList();
+            SettingsManager.LoadFrom(path, out List<PictureFolder> temp);
+            if (temp == null)
+                return;
+            if (temp.Count == 0)
+                return;
+
+            folders = temp;
             ListDirectories(displayMode);
         }
 
@@ -749,7 +798,14 @@ namespace PictureSelecter
         {
             if (folders.Count != 0)
             {
-                if (MessageBox.Show("Vous êtes sur le point de quitter.\nVérifier de bien avoir sauvegardé avant de quitter !\nVoulez-vous vraiment quitter ?", "ATTENTION", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) != DialogResult.Yes)
+                if (
+                    MessageBox.Show(
+                        "Vous êtes sur le point de quitter.\nVérifier de bien avoir sauvegardé avant de quitter !\nVoulez-vous vraiment quitter ?",
+                        "ATTENTION",
+                        MessageBoxButtons.YesNoCancel,
+                        MessageBoxIcon.Warning
+                    ) != DialogResult.Yes
+                )
                 {
                     return;
                 }
@@ -768,7 +824,10 @@ namespace PictureSelecter
             AutoSave();
         }
 
-        private void ouvrirLeDossierDeSauvegardesAutoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ouvrirLeDossierDeSauvegardesAutoToolStripMenuItem_Click(
+            object sender,
+            EventArgs e
+        )
         {
             Process.Start(autoSavePath);
         }
@@ -805,7 +864,16 @@ namespace PictureSelecter
 
             public void ApplyFilter(int mode)
             {
-                images_f = images.Where((i, b) => ((mode == 0) || (mode == 1 && i.getSaved()) || (mode == 2 && !i.getSaved()))).ToList();
+                images_f = images
+                    .Where(
+                        (i, b) =>
+                            (
+                                (mode == 0)
+                                || (mode == 1 && i.getSaved())
+                                || (mode == 2 && !i.getSaved())
+                            )
+                    )
+                    .ToList();
             }
 
             public string GetFolderPath() => folderPath;
@@ -864,7 +932,14 @@ namespace PictureSelecter
 
         private void effacerToutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Attention !\nToutes données non sauvegardées seront perdues !!\nTous les dossiers ouverts seront déchargés !\nCONTINUER ?", "ATTENTION", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (
+                MessageBox.Show(
+                    "Attention !\nToutes données non sauvegardées seront perdues !!\nTous les dossiers ouverts seront déchargés !\nCONTINUER ?",
+                    "ATTENTION",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Warning
+                ) == DialogResult.Yes
+            )
             {
                 folders.Clear();
                 tvMain.Nodes.Clear();
@@ -906,9 +981,17 @@ namespace PictureSelecter
                     {
                         PictureFolder pictureFolder = new PictureFolder(file);
                         OuvrirImages(pictureFolder);
-                        if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
+                        if (
+                            pictureFolder.GetImages() == null
+                            || pictureFolder.GetImages()?.Count == 0
+                        )
                         {
-                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(
+                                "Dossier sans images valides :\n" + pictureFolder.GetFolderPath(),
+                                "Information",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information
+                            );
                         }
                         else
                         {
@@ -919,9 +1002,17 @@ namespace PictureSelecter
                     {
                         PictureFolder pictureFolder = copies.FirstOrDefault();
                         OuvrirImages(pictureFolder);
-                        if (pictureFolder.GetImages() == null || pictureFolder.GetImages()?.Count == 0)
+                        if (
+                            pictureFolder.GetImages() == null
+                            || pictureFolder.GetImages()?.Count == 0
+                        )
                         {
-                            MessageBox.Show("Dossier sans images valides :\n" + pictureFolder.GetFolderPath(), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(
+                                "Dossier sans images valides :\n" + pictureFolder.GetFolderPath(),
+                                "Information",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information
+                            );
                         }
                     }
                 }
@@ -1114,7 +1205,12 @@ namespace PictureSelecter
         {
             bool s = !modeFacileToolStripMenuItem.Checked;
             btnPrevious.Visible = btnNext.Visible = lblCount.Visible = s;
-            label1.Visible = cbboxSizeMode.Visible = btnRotCW.Visible = btnRotCCW.Visible = btnKeep.Visible = s;
+            label1.Visible =
+                cbboxSizeMode.Visible =
+                btnRotCW.Visible =
+                btnRotCCW.Visible =
+                btnKeep.Visible =
+                    s;
         }
 
         //private Image zoomImage(Image image, double factor)
